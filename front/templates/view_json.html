@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>File JSON View</title>
+    </head>
+    <body>
+
+        <div id="data-container"></div>
+
+        <script>
+        var data = JSON.parse('{{ json_data|safe}}')
+        const table = document.createElement('table');
+        
+        // Create table header row
+        const tableHeaderRow = document.createElement('tr');
+        for (const key in data) {
+            const headerCell = document.createElement('th');
+            headerCell.textContent = key;
+            tableHeaderRow.appendChild(headerCell);
+        }
+        table.appendChild(tableHeaderRow);
+        
+        // Create a table data row
+        const dataRow = document.createElement('tr');
+        for (const key in data) {
+            const dataCell = document.createElement('td');
+            dataCell.textContent = data[key];
+        
+            // Check if the data cell is already appended before adding (prevents circular reference)
+            if (!dataRow.contains(dataCell)) {
+            dataRow.appendChild(dataCell);
+            }
+        }
+        table.appendChild(dataRow);
+        
+        const container = document.getElementById('data-container');
+        container.appendChild(table);
+        </script>
+        
+    </body>
+</html>
