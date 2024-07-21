@@ -1,0 +1,7 @@
+fastapi==0.108.0
+fastjsonschema==2.19.1
+uvicorn==0.25.0
+Pillow==9.5.0
+pydantic==2.5.3
+pydantic_core==2.14.6
+python-multipart==0.0.9
