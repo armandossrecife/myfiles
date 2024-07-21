@@ -1,0 +1,8 @@
+Flask==2.2.3
+Flask-Bcrypt==1.0.1
+Flask-Login==0.6.3
+Flask-SQLAlchemy==3.0.3
+Flask-WTF==1.2.1
+requests==2.28.2
+requests-mock==1.11.0
+Werkzeug==2.2.3
