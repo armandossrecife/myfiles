@@ -1,9 +1,17 @@
 from flask import Flask, render_template, request
 import requests
+import os
 
 app = Flask(__name__)
 
+BACKEND_IP = os.getenv('BACKEND_IP')
 FASTAPI_URL = "http://localhost:8000"
+
+if BACKEND_IP:
+    FASTAPI_URL = f"http://{BACKEND_IP}:8000"
+else:
+    print("Você precisa definir o IP backend")
+
 url_servico_upload = f'{FASTAPI_URL}/upload'
 url_servico_files = f'{FASTAPI_URL}/files'
 url_servico_analises = f'{FASTAPI_URL}/analysis'
