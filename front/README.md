@@ -40,6 +40,8 @@ pip3 install -r requirements.txt
 
 ```bash
 export MY_SECRET_KEY=?????????
+export BACKEND_IP=?.?.?.?
+export BACKEND_PORT=?
 ```
 
 ## 4. Para executar a aplicação principal
@@ -54,7 +56,7 @@ ou
 .\exec.sh
 ```
 
-Abra o browser: http://localhost:5000/login
+Abra o browser: http://localhost:5000
 
 ## Flask frontend review
 

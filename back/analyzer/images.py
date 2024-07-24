@@ -1,5 +1,7 @@
 from PIL import Image
 import os
+import utilidades
+from fastapi.encoders import jsonable_encoder
 
 class Imagem: 
     def __init__(self, nome_arquivo, path_arquivo):
@@ -26,3 +28,22 @@ class Imagem:
 
     def __str__(self):
         return f'Nome: {self.nome_arquivo}, Dimensoes:{self.dimensoes()}, Formato: {self.formato()}, Tamanho: {self.tamanho()}'
+
+def analisa_imagem(nome_arquivo, path_arquivo):
+    try: 
+        if os.path.isfile(path_arquivo):
+            my_image = Imagem(nome_arquivo, path_arquivo)
+            altura, largura = my_image.dimensoes()
+            altura = str(altura)
+            largura = str(largura)
+            tamanho = str(my_image.tamanho())
+            formato = my_image.formato()
+            formato = formato.lower()
+            my_image_dto = utilidades.ImageDTO(nome=nome_arquivo, altura=altura, largura=largura, tamanho=tamanho, formato=formato)
+        return jsonable_encoder(my_image_dto)
+    except Exception as ex:
+        raise ValueError(str(ex))
+
+def processa_imagem(nome_arquivo, path_arquivo, path_results):
+    json_image_anlysed = analisa_imagem(nome_arquivo, path_arquivo)
+    utilidades.salva_json_em_arquivo(my_json=json_image_anlysed, nome_arquivo=nome_arquivo, path_json=path_results)

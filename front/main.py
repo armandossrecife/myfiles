@@ -1,16 +1,18 @@
 from flask import Flask, render_template, request
 import requests
 import os
+import utilidades
 
 app = Flask(__name__)
 
 BACKEND_IP = os.getenv('BACKEND_IP')
+BACKEND_PORT = os.getenv('BACKEND_PORT')
 FASTAPI_URL = "http://localhost:8000"
 
-if BACKEND_IP:
-    FASTAPI_URL = f"http://{BACKEND_IP}:8000"
+if BACKEND_IP and BACKEND_PORT:
+    FASTAPI_URL = f"http://{BACKEND_IP}:{BACKEND_PORT}"
 else:
-    print("Você precisa definir o IP backend")
+    print("Você precisa definir o IP e porta do backend")
 
 url_servico_upload = f'{FASTAPI_URL}/upload'
 url_servico_files = f'{FASTAPI_URL}/files'
@@ -60,7 +62,17 @@ def download_file(filename):
     url_servico_download_file = url_servico_download + '/'+ filename
     response = requests.get(url_servico_download_file, stream=True)
     if response.status_code == 200:
-        return render_template('view_image.html', filename=filename, url_file=url_servico_download_file)
+        extensao = utilidades.get_file_extension(filename)
+        file_type = utilidades.get_media_type(extensao)
+        # para imagem
+        if file_type == "image/jpeg" or file_type == "image/jpg" or file_type=="image/png":
+            return render_template('view_image.html', filename=filename, url_file=url_servico_download_file)
+        # para video
+        if file_type == "video/mp4":
+            pass
+        # para audio
+        if file_type == "audio/mp3":
+            pass
     else:
         return 'Error downloading file'
 

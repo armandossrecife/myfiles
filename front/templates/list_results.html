@@ -10,5 +10,6 @@
         <li><a href="{{ servico }}/{{ file }}">{{ file }}</a> <a href="{{ url_for('results_file', filename=file) }}">View</a> </li>
         {% endfor %}
     </ul>
+    <a href="{{ url_for('index')}}">[Home]</a>
 </body>
 </html>
