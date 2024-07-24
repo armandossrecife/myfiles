@@ -60,7 +60,7 @@ Abra o browser: http://localhost:5000
 
 ## Flask frontend review
 
-TBD
+[Telas](https://github.com/armandossrecife/myfiles/blob/main/front/telas.md)
 
 # B. Descrição da estrutura da aplicação 
 
