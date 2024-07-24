@@ -69,10 +69,10 @@ def download_file(filename):
             return render_template('view_image.html', filename=filename, url_file=url_servico_download_file)
         # para video
         if file_type == "video/mp4":
-            pass
+            return render_template('view_video.html', filename=filename, url_file=url_servico_download_file) 
         # para audio
         if file_type == "audio/mp3":
-            pass
+            return render_template('view_audio.html', filename=filename, url_file=url_servico_download_file)
     else:
         return 'Error downloading file'
 

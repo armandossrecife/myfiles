@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Audio Play</title>
+</head>
+<body>
+    <h1>{{ filename }}</h1>
+
+    <audio controls>
+        <source src="{{ url_file }}" type="audio/mp3" alt="Audio">
+        Seu browser nao suporta audio
+    </audio>
+    <br>
+    <a href="{{ url_for('index')}}">[Home]</a>
+</body>
+</html>

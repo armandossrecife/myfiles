@@ -7,7 +7,7 @@
     <h1>List of Files Results</h1>
     <ul>
         {% for file in files %}
-        <li><a href="{{ servico }}/{{ file }}">{{ file }}</a> <a href="{{ url_for('results_file', filename=file) }}">View</a> </li>
+        <li><a href="{{ servico }}/{{ file }}">{{ file }}</a> <a href="{{ url_for('results_file', filename=file) }}">Details</a> </li>
         {% endfor %}
     </ul>
     <a href="{{ url_for('index')}}">[Home]</a>

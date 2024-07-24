@@ -5,6 +5,8 @@ from fastapi.responses import FileResponse
 import uvicorn
 import utilidades
 from analyzer import images
+from analyzer import videos
+from analyzer import audios
 
 app = FastAPI()
 
@@ -21,9 +23,19 @@ async def upload_file(file: UploadFile = File(...)):
     uploaded_file = filename_uuid + "." + extensao
     if utilidades.allowed_file(uploaded_file):
         file_location = f"{utilidades.UPLOAD_DIRECTORY}/{uploaded_file}"
+        extensao = utilidades.get_file_extension(uploaded_file)
+        file_type = utilidades.get_media_type(extensao)
         with open(file_location, "wb+") as file_object:
             file_object.write(await file.read())
-        images.processa_imagem(nome_arquivo=filename_uuid, path_arquivo=file_location, path_results=utilidades.RESULTS_DIRECTORY)
+        # Para imagem
+        if file_type == "image/jpeg" or file_type == "image/jpg" or file_type=="image/png":
+            images.processa_imagem(nome_arquivo=filename_uuid, path_arquivo=file_location, path_results=utilidades.RESULTS_DIRECTORY)
+        # Para video
+        if file_type == "video/mp4":
+            videos.processa_video(nome_arquivo=filename_uuid, path_arquivo=file_location, path_results=utilidades.RESULTS_DIRECTORY)
+        # Para audio
+        if file_type == "audio/mp3":
+            audios.processa_audio(nome_arquivo=filename_uuid, path_arquivo=file_location, path_results=utilidades.RESULTS_DIRECTORY)
     else:
         raise HTTPException(status_code=404, detail="Erro: Tipo de arquivo não permitido")
     return {"filename": file.filename}

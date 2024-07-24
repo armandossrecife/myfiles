@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Video View</title>
+</head>
+<body>
+    <h1>{{ filename }}</h1>
+
+    <video width="320" height="240" controls>
+        <source src="{{ url_file }}" type="video/mp4" alt="Video">
+        Seu browser nao suporta audio
+    </video>
+    <br>
+    <a href="{{ url_for('index')}}">[Home]</a>
+</body>
+</html>
