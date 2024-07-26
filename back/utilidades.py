@@ -1,32 +1,8 @@
-from pydantic import BaseModel
 import json
-
-class ImageDTO(BaseModel):
-    nome: str
-    altura: str
-    largura: str
-    tamanho: str
-    formato: str
-
-class VideoDTO(BaseModel):
-    nome: str
-    altura: str
-    largura: str
-    tamanho: str
-    duracao: str
-    frame_rate: str
-    formato: str
-
-class AudioDTO(BaseModel):
-    nome: str
-    tamanho: str
-    duracao: str
-    sample_rate: str
-    canais: str
-    formato: str
+import os
 
 UPLOAD_DIRECTORY = "uploads"
-RESULTS_DIRECTORY = "results"
+
 ALLOWED_EXTENSIONS = {'jpeg','jpg', 'png', 'mp4', 'mp3'}
 
 def allowed_file(filename):
@@ -53,3 +29,7 @@ def salva_json_em_arquivo(my_json, nome_arquivo, path_json):
             json.dump(my_json, f)
     except Exception as ex:
         raise ValueError(str(ex))
+
+def cria_pasta(path_folder):
+    if not os.path.exists(path_folder):
+        os.makedirs(path_folder)

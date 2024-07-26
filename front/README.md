@@ -91,16 +91,10 @@ Principais componentes da aplicação principal (main.py)
      * No método POST, recebe o arquivo enviado pelo formulário, envia para o backend através de uma requisição POST para a URL `/upload` e exibe uma mensagem de sucesso ou erro.
   * `/arquivos`: Lista os arquivos carregados.
      * Envia uma requisição GET para a URL `/files` do backend e exibe a lista de arquivos obtida na resposta (utilizando o template `list_files.html`).
-  * `/resultados`:  Lista os resultados das análises.
-     * Envia uma requisição GET para a URL `/analysis` do backend e exibe a lista de resultados obtida na resposta (utilizando o template `list_results.html`).
   * `/download/<filename>`: Permite baixar um arquivo carregado.
      * Recebe o nome do arquivo (`filename`) como argumento da rota.
      * Constrói a URL de download completa para o arquivo no backend (`/download/<filename>`) e envia uma requisição GET para essa URL.
      * Exibe a visualização do arquivo baixado de acordo com seu tipo de mídia (imagem, vídeo ou áudio) utilizando templates específicos (`view_image.html`, `view_video.html`, `view_audio.html`).
-  * `/resultados/<filename>`: Permite visualizar os resultados de um arquivo.
-     * Recebe o nome do arquivo (`filename`) como argumento da rota.
-     * Constrói a URL completa para recuperar os resultados do arquivo no backend (`/results/<filename>`) e envia uma requisição GET para essa URL.
-     * Exibe os resultados recebidos no formato JSON utilizando o template `view_json.html`.
 
 **Integração com o Backend:**
 
@@ -111,4 +105,4 @@ Principais componentes da aplicação principal (main.py)
 **Templates:**
 
 * O código utiliza o Jinja2 para renderizar templates HTML dinamicamente.
-* Os templates (`index.html`, `upload.html`, `list_files.html`, `list_results.html`, `view_image.html`, `view_video.html`, `view_audio.html`, `view_json.html`) exibem a interface do usuário para upload de arquivos, listagem de arquivos e resultados, visualização de arquivos baixados e visualização dos resultados da análise.
+* Os templates (`index.html`, `upload.html`, `list_files.html`, `view_image.html`, `view_video.html`, `view_audio.html`, `view_json.html`) exibem a interface do usuário para upload de arquivos, listagem de arquivos e resultados, visualização de arquivos baixados e visualização dos resultados da análise.

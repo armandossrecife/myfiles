@@ -2,6 +2,10 @@ from flask import Flask, render_template, request
 import requests
 import os
 import utilidades
+import plotly.express as px
+import plotly.graph_objects as go
+import pandas as pd
+import json
 
 app = Flask(__name__)
 
@@ -16,10 +20,8 @@ else:
 
 url_servico_upload = f'{FASTAPI_URL}/upload'
 url_servico_files = f'{FASTAPI_URL}/files'
-url_servico_analises = f'{FASTAPI_URL}/analysis'
-url_servico_resultados = f'{FASTAPI_URL}/results'
 url_servico_download = f"{FASTAPI_URL}/download"
-url_servico_result = f"{FASTAPI_URL}/results"
+url_servico_mytime = f"{FASTAPI_URL}/mytime"
 
 @app.route('/')
 def index():
@@ -48,15 +50,6 @@ def list_files():
     else:
         return 'Error listing files'
 
-@app.route('/resultados')
-def list_files_results():
-    response = requests.get(url_servico_analises)
-    if response.status_code == 200:
-        files = response.json()['files']
-        return render_template('list_results.html', files=files, servico=url_servico_resultados)
-    else:
-        return 'Error listing results of files'
-
 @app.route('/download/<filename>')
 def download_file(filename):
     url_servico_download_file = url_servico_download + '/'+ filename
@@ -76,16 +69,32 @@ def download_file(filename):
     else:
         return 'Error downloading file'
 
-@app.route('/resultados/<filename>')
-def results_file(filename):
-    
-    url_servico_result_file = url_servico_result  + '/' + filename
-    response = requests.get(f'{url_servico_result_file}', stream=True)
+def generate_local_plot():
+    df = px.data.iris()
+    print(df.head())
+    # Create a scatter plot
+    fig = px.scatter(df, x="sepal_length", y="sepal_width", color="species")
+    return fig
+
+@app.route('/myplotly')
+def show_plotly():
+    fig = generate_local_plot()
+    return render_template('plotly.html', graphJSON=fig.to_json())
+
+@app.route('/mytime')
+def show_mytime():
+    response = requests.get(url_servico_mytime)
     if response.status_code == 200:
-        my_json = response.text
-        return render_template('view_json.html', filename=filename, url_file=url_servico_result_file, json_data=my_json)
+        data = response.json()
+        json_data = json.loads(data)
+        df = pd.DataFrame(json_data)
+        print(type(df))
+        print(df.head())
+        fig = px.timeline(df, x_start="Start", x_end="Finish", y="Task")
+        fig.update_yaxes(autorange="reversed")
+        return render_template('list_mytime.html', graphJSON=fig.to_json())
     else:
-        return 'Error to show results of file'
+        return 'Error show graph'
 
 if __name__ == '__main__':
     app.run(debug=True)
