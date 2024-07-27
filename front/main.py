@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_from_directory
 import requests
 import os
 import utilidades
@@ -22,6 +22,13 @@ url_servico_upload = f'{FASTAPI_URL}/upload'
 url_servico_files = f'{FASTAPI_URL}/files'
 url_servico_download = f"{FASTAPI_URL}/download"
 url_servico_mytime = f"{FASTAPI_URL}/mytime"
+url_servico_mytasks = f"{FASTAPI_URL}/mytasks"
+
+STATIC_PATH = os.path.join(app.root_path, 'static')
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(STATIC_PATH, 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 @app.route('/')
 def index():
@@ -88,13 +95,24 @@ def show_mytime():
         data = response.json()
         json_data = json.loads(data)
         df = pd.DataFrame(json_data)
-        print(type(df))
-        print(df.head())
         fig = px.timeline(df, x_start="Start", x_end="Finish", y="Task")
         fig.update_yaxes(autorange="reversed")
         return render_template('list_mytime.html', graphJSON=fig.to_json())
     else:
         return 'Error show graph'
+
+@app.route('/mytasks')
+def show_mytasks():
+    response = requests.get(url_servico_mytasks)
+    if response.status_code == 200:
+        data = response.json()
+        tarefas = json.loads(data)
+        print(tarefas)
+        df = pd.DataFrame(tarefas)
+        print(df)
+        return render_template('list_mytasks.html', tarefas=tarefas)
+    else:
+        return 'Error show tasks'
 
 if __name__ == '__main__':
     app.run(debug=True)
