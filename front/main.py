@@ -6,12 +6,18 @@ import plotly.express as px
 import plotly.graph_objects as go
 import pandas as pd
 import json
+from flask import redirect, session
+from app.routes import auth
+from app.routes import dashboard
 
 app = Flask(__name__)
+app.secret_key = "my_secret_key"
 
 BACKEND_IP = os.getenv('BACKEND_IP')
 BACKEND_PORT = os.getenv('BACKEND_PORT')
 FASTAPI_URL = "http://localhost:8000"
+
+STATIC_PATH = os.path.join(app.root_path, 'static')
 
 if BACKEND_IP and BACKEND_PORT:
     FASTAPI_URL = f"http://{BACKEND_IP}:{BACKEND_PORT}"
@@ -24,7 +30,9 @@ url_servico_download = f"{FASTAPI_URL}/download"
 url_servico_mytime = f"{FASTAPI_URL}/mytime"
 url_servico_mytasks = f"{FASTAPI_URL}/mytasks"
 
-STATIC_PATH = os.path.join(app.root_path, 'static')
+#Registra os Blueprints
+app.register_blueprint(auth.auth_bp)
+app.register_blueprint(dashboard.dashboard_bp)
 
 @app.route('/favicon.ico')
 def favicon():
