@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Dashboard</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <h1>Exemplo de gráfico dinâmico de tarefas ao longo do tempo</h1> 
+    <div id="graph1"></div>
+    <script>
+        var graph1 = {{ graphJSON | safe }};
+        Plotly.newPlot('graph1', graph1);
+    </script>
+    <a href="{{ url_for('index')}}">[Home]</a>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header>
+         <h1>{{ titulo }}</h1>
+        <img src="{{ profilePic }}" alt="Profile Picture">
+    </header>
+
+    <main>
+        <h2>Welcome, {{ user.username }}!</h2>
+        <h3>Notes</h3>
+        <ul>
+            {% for note in dadosDashboardDTO.lista_notas %}
+                <li>{{ note }}</li>
+            {% endfor %}
+        </ul>
+    </main>
+    <a class="nav-link"href="{{ url_for('auth.logout') }}">[Sair]</a>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Tarefas</title>
+</head>
+<body>
+    <table>
+        <thead>
+            <tr>
+                <th>Descrição</th>
+                <th>Data de Expiração</th>
+                <th>Prioridade</th>
+                <th>Data de Conclusão</th>
+                <th>Concluída</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for tarefa in tarefas %}
+            <tr>
+                <td>{{ tarefa.descricao }}</td>
+                <td>{{ tarefa.data_expiracao }}</td>
+                <td>{{ tarefa.prioridade }}</td>
+                <td>{{ tarefa.data_conclusao }}</td>
+                <td>{{ tarefa.concluida }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('index')}}">[Home]</a>
+</body>
+</html>

@@ -74,21 +74,4 @@ Principais componentes da aplicação principal (main.py)
 
 **Componentes:**
 
-* **Envio e validação de arquivo:**
-    * Usa `UploadFile` do FastAPI para upload de arquivos.
-    * As funções `utilidades.get_file_extension` e `utilidades.allowed_file` lidam com a validação da extensão do arquivo.
-    * Os uploads são salvos com um nome de arquivo exclusivo gerado usando `uuid.uuid4`.
-* **Detecção de tipo de mídia:**
-    * A função `utilidades.get_media_type` determina o tipo de mídia (imagem, vídeo, áudio) a partir da extensão.
-* **Processamento de arquivo:**
-    * Com base no tipo de mídia, chama a função de processamento apropriada do módulo `analyzer`. Essas funções lidam com a extração de dados básicos dos arquivos carregados.
-        * `images.processa_imagem` para imagens.
-        * `videos.processa_video` para vídeos.
-        * `audios.processa_audio` para áudio.
-* **Armazenamento de Dados:**
-    * Os dados processados são salvos no `utilidades.RESULTS_DIRECTORY`.
-* **Endereços adicionais:**
-    * `/files` lista os arquivos carregados.
-    * `/analysis` lista os resultados da análise (arquivos de dados processados).
-    * `/download/{file_name}` permite baixar arquivos carregados.
-    * `/results/{file_name}` permite baixar resultados da análise (arquivos de dados processados).
+TBD

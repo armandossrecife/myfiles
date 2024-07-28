@@ -1,13 +1,23 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, send_from_directory
 import requests
 import os
 import utilidades
+import plotly.express as px
+import plotly.graph_objects as go
+import pandas as pd
+import json
+from flask import redirect, session
+from app.routes import auth
+from app.routes import dashboard
 
 app = Flask(__name__)
+app.secret_key = "my_secret_key"
 
 BACKEND_IP = os.getenv('BACKEND_IP')
 BACKEND_PORT = os.getenv('BACKEND_PORT')
 FASTAPI_URL = "http://localhost:8000"
+
+STATIC_PATH = os.path.join(app.root_path, 'static')
 
 if BACKEND_IP and BACKEND_PORT:
     FASTAPI_URL = f"http://{BACKEND_IP}:{BACKEND_PORT}"
@@ -16,10 +26,17 @@ else:
 
 url_servico_upload = f'{FASTAPI_URL}/upload'
 url_servico_files = f'{FASTAPI_URL}/files'
-url_servico_analises = f'{FASTAPI_URL}/analysis'
-url_servico_resultados = f'{FASTAPI_URL}/results'
 url_servico_download = f"{FASTAPI_URL}/download"
-url_servico_result = f"{FASTAPI_URL}/results"
+url_servico_mytime = f"{FASTAPI_URL}/mytime"
+url_servico_mytasks = f"{FASTAPI_URL}/mytasks"
+
+#Registra os Blueprints
+app.register_blueprint(auth.auth_bp)
+app.register_blueprint(dashboard.dashboard_bp)
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(STATIC_PATH, 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 @app.route('/')
 def index():
@@ -48,15 +65,6 @@ def list_files():
     else:
         return 'Error listing files'
 
-@app.route('/resultados')
-def list_files_results():
-    response = requests.get(url_servico_analises)
-    if response.status_code == 200:
-        files = response.json()['files']
-        return render_template('list_results.html', files=files, servico=url_servico_resultados)
-    else:
-        return 'Error listing results of files'
-
 @app.route('/download/<filename>')
 def download_file(filename):
     url_servico_download_file = url_servico_download + '/'+ filename
@@ -76,16 +84,43 @@ def download_file(filename):
     else:
         return 'Error downloading file'
 
-@app.route('/resultados/<filename>')
-def results_file(filename):
-    
-    url_servico_result_file = url_servico_result  + '/' + filename
-    response = requests.get(f'{url_servico_result_file}', stream=True)
+def generate_local_plot():
+    df = px.data.iris()
+    print(df.head())
+    # Create a scatter plot
+    fig = px.scatter(df, x="sepal_length", y="sepal_width", color="species")
+    return fig
+
+@app.route('/myplotly')
+def show_plotly():
+    fig = generate_local_plot()
+    return render_template('plotly.html', graphJSON=fig.to_json())
+
+@app.route('/mytime')
+def show_mytime():
+    response = requests.get(url_servico_mytime)
     if response.status_code == 200:
-        my_json = response.text
-        return render_template('view_json.html', filename=filename, url_file=url_servico_result_file, json_data=my_json)
+        data = response.json()
+        json_data = json.loads(data)
+        df = pd.DataFrame(json_data)
+        fig = px.timeline(df, x_start="Start", x_end="Finish", y="Task")
+        fig.update_yaxes(autorange="reversed")
+        return render_template('list_mytime.html', graphJSON=fig.to_json())
     else:
-        return 'Error to show results of file'
+        return 'Error show graph'
+
+@app.route('/mytasks')
+def show_mytasks():
+    response = requests.get(url_servico_mytasks)
+    if response.status_code == 200:
+        data = response.json()
+        tarefas = json.loads(data)
+        print(tarefas)
+        df = pd.DataFrame(tarefas)
+        print(df)
+        return render_template('list_mytasks.html', tarefas=tarefas)
+    else:
+        return 'Error show tasks'
 
 if __name__ == '__main__':
     app.run(debug=True)
