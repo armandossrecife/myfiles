@@ -6,29 +6,6 @@ from app import entidades
 
 router = APIRouter()
 
-@router.post("/users/{username}/notes", dependencies=[Depends(seguranca.get_current_user)])
-async def create_note(username: str, nota: entidades.Note, db: Session = Depends(banco.get_db)):
-    """ Creates a new note for the user identified by username.
-    Args:
-        username: Username of the user creating the note.
-        description: Note object containing the note description.
-    Returns:
-        The created Note object.
-    Raises:
-        HTTPException: If note creation fails.
-    """
-    user_dao = banco.UserDAO(db)
-    user = user_dao.get_user(username)
-    if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
-
-    try:
-        notes_dao = banco.NotesDAO(db)
-        created_note = notes_dao.create_note(user.id, nota.description)
-        return created_note
-    except Exception as e:
-        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Error creating note: {str(e)}")
-
 @router.get("/users/{username}/notes", dependencies=[Depends(seguranca.get_current_user)])
 async def get_all_notes(username: str, db: Session = Depends(banco.get_db)):
     """ Retrieves all notes for the user identified by username.
@@ -77,6 +54,29 @@ async def get_note_by_id(username: str, note_id: int, db: Session = Depends(banc
         return specific_note
     except Exception as e:
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=f"Error retrieving note: {str(e)}")
+
+@router.post("/users/{username}/notes", dependencies=[Depends(seguranca.get_current_user)])
+async def create_note(username: str, nota: entidades.Note, db: Session = Depends(banco.get_db)):
+    """ Creates a new note for the user identified by username.
+    Args:
+        username: Username of the user creating the note.
+        description: Note object containing the note description.
+    Returns:
+        The created Note object.
+    Raises:
+        HTTPException: If note creation fails.
+    """
+    user_dao = banco.UserDAO(db)
+    user = user_dao.get_user(username)
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+
+    try:
+        notes_dao = banco.NotesDAO(db)
+        created_note = notes_dao.create_note(user.id, nota.description)
+        return created_note
+    except Exception as e:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f"Error creating note: {str(e)}")
 
 @router.put("/users/{username}/notes/{note_id}", dependencies=[Depends(seguranca.get_current_user)])
 async def update_note(username: str, note_id: int, description: str, db: Session = Depends(banco.get_db)):
