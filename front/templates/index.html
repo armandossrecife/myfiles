@@ -4,10 +4,13 @@
     <title>My App Front</title>
 </head>
 <body>
-    <h1>File Management</h1>
+    <h1>App Principal</h1>
+    <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+    <h1>Testes Públicos</h1>
+    <h2>File Management</h2>
     <li> <a href="{{ url_for('upload_file') }}"">Upload Arquivo</a> </li>
     <li> <a href="{{ url_for('list_files') }}">Lista Arquivos</a> </li>
-    <h1>Dashboard</h1> 
+    <h2>Gráficos</h2> 
     <li> <a href="{{ url_for('show_mytime') }}">Show my time</a> </li>
     <li> <a href="{{ url_for('show_plotly') }}">Show scatter plot</a> </li>
     <li> <a href="{{ url_for('show_mytasks') }}">Show tasks</a></li>
